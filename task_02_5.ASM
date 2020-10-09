@@ -1,6 +1,6 @@
-;Разработать программу, которая вводит одномерный массив A[N], 
-;формирует из элементов массива A новый массив B 
-;из НЕЧЕТНЫХ чисел и выводит оба массива.
+;Разработать программу, которая вводит одномерный массив A[N],
+;формирует из элементов массива A новый массив B
+;из нечетных чисел и выводит оба массива.
 
 format PE Console
 
@@ -41,6 +41,8 @@ section '.code' code readable executable
                 call FormB
                 call WriteB
 
+                ;Очистка памяти
+
                 push [A]
                 push 0
                 push [heapA]
@@ -52,6 +54,8 @@ section '.code' code readable executable
                 push [heapB]
                 call [HeapFree]
                 add esp, 12
+
+                ;Вывод завершающей строки и выход из программы
 
                 push exitStr
                 call [printf]
@@ -70,6 +74,8 @@ ReadSizeA:
         push enterElem
         call [scanf]
         add esp, 8
+
+        ;Проверка корректности размера А
 
         cmp [sizeA], 0
         jl WrongSizeA
@@ -103,12 +109,16 @@ GetSizeB:
                 imul ecx, 4
                 add eax, ecx
 
+                ;Выясняем, является ли элемент массива А нечетным, выполняя деление с остатком
+
                 mov eax, dword [eax]
                 mov ecx, 2
                 mov edx, 0
 
                 div ecx
                 mov [tmp], edx
+
+                ;Если да, то добавляем к размеру В единицу
 
                 cmp [tmp], 0
                 jg IsOdd
@@ -192,10 +202,14 @@ FormB:
                 mov ebx, [eax]
                 mov [cur], ebx
 
+                ;Проверяем, является ли элемент массива А нечетным
+
                 mov eax, [cur]
                 mov ecx, 2
                 mov edx, 0
                 div ecx
+
+                ;Если да, то добавляем его в В
 
                 cmp edx, 0
                 jg AddElemToB
